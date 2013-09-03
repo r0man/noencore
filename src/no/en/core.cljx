@@ -1,6 +1,6 @@
 (ns no.en.core
   (:refer-clojure :exclude [replace])
-  (:require [clojure.string :refer [replace split]]
+  (:require [clojure.string :refer [join replace split]]
             #+cljs [goog.crypt.base64 :as base64])
   #+clj (:import [java.net URLEncoder URLDecoder]
                  [org.apache.commons.codec.binary Base64]))
@@ -59,6 +59,15 @@
 (defn parse-integer
   "Parse `s` as a integer number."
   [s] (parse-number s #(#+clj Integer/parseInt #+cljs js/parseInt %1)))
+
+(defn format-query-params
+  "Format the map `m` into a query parameter string."
+  [m]
+  (->> (seq m)
+       (map #(vector (url-encode (name (first %1)))
+                     (url-encode (second %1))))
+       (map #(join "=" %1))
+       (join "&")))
 
 (defn parse-query-params
   "Parse the query parameter string `s` and return a map."
