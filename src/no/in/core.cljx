@@ -1,9 +1,9 @@
 (ns no.in.core
-  #+clj (:import [java.net URLEncoder URLDecoder]
-                 [org.apache.commons.codec.binary Base64])
   (:refer-clojure :exclude [replace])
   (:require [clojure.string :refer [replace]]
-            #+cljs [goog.crypt.base64 :as base64]))
+            #+cljs [goog.crypt.base64 :as base64])
+  #+clj (:import [java.net URLEncoder URLDecoder]
+                 [org.apache.commons.codec.binary Base64]))
 
 (defn utf8-string
   "Returns `bytes` as an UTF-8 encoded string."
