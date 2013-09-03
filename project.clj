@@ -5,7 +5,8 @@
   :min-lein-version "2.0.0"
   :license {:name "Eclipse Public License"
             :url "http://www.eclipse.org/legal/epl-v10.html"}
-  :dependencies [[org.clojure/clojure "1.5.1"]
+  :dependencies [[commons-codec/commons-codec "1.8"]
+                 [org.clojure/clojure "1.5.1"]
                  [org.clojure/clojurescript "0.0-1853"]]
   :profiles {:dev {:dependencies [[com.cemerick/clojurescript.test "0.0.4"]
                                   [com.keminglabs/cljx "0.3.0"]]
@@ -17,15 +18,12 @@
   :cljx {:builds [{:source-paths ["src"]
                    :output-path "target/classes"
                    :rules :clj}
-
                   {:source-paths ["src"]
                    :output-path "target/classes"
                    :rules :cljs}
-
                   {:source-paths ["test"]
                    :output-path "target/test-classes"
                    :rules :clj}
-
                   {:source-paths ["test"]
                    :output-path "target/test-classes"
                    :rules :cljs}]}
@@ -34,4 +32,5 @@
                         :compiler {:output-to "target/testable.js"
                                    :libs [""]
                                    :optimizations :advanced
-                                   :pretty-print true}}]})
+                                   :pretty-print true}}]}
+  :test-paths ["target/test-classes"])

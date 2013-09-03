@@ -1,12 +1,26 @@
 (ns no.in.core-test
   #+cljs (:require-macros [cemerick.cljs.test :refer [deftest is are]])
-  (:require [no.in.core :refer [url-encode url-decode]]
+  (:require [no.in.core :as c]
             #+clj [clojure.test :refer :all]
             #+cljs [cemerick.cljs.test :as t]))
 
+(deftest test-base64-encode
+  (are [s expected]
+    (is (= expected (c/base64-encode s)))
+    nil nil
+    "" ""
+    "x" "eA=="))
+
+(deftest test-base64-decode
+  (are [s expected]
+    (is (= expected (c/base64-decode s)))
+    nil nil
+    "" ""
+    "eA==" "x"))
+
 (deftest test-url-encode
   (are [s expected]
-    (is (= expected (url-encode s)))
+    (is (= expected (c/url-encode s)))
     nil nil
     "" ""
     "a" "a"
@@ -16,7 +30,7 @@
 
 (deftest test-url-decode
   (are [s expected]
-    (is (= expected (url-decode s)))
+    (is (= expected (c/url-decode s)))
     nil nil
     "" ""
     "a" "a"

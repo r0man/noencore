@@ -1,6 +1,26 @@
 (ns no.in.core
+  #+clj (:import [org.apache.commons.codec.binary Base64])
   (:refer-clojure :exclude [replace])
-  (:require [clojure.string :refer [replace]]))
+  (:require [clojure.string :refer [replace]]
+            #+cljs [goog.crypt.base64 :as base64]))
+
+(defn base64-encode
+  "Returns `s` as a Base64 encoded string."
+  [s]
+  (when s
+    #+clj
+    (String. (Base64/encodeBase64 (.getBytes s)) "UTF-8")
+    #+cljs
+    (base64/encodeString s false)))
+
+(defn base64-decode
+  "Returns `s` as a Base64 decoded string."
+  [s]
+  (when s
+    #+clj
+    (String. (Base64/decodeBase64 (.getBytes s)) "UTF-8")
+    #+cljs
+    (base64/decodeString s false)))
 
 (defn url-encode
   "Returns `s` as an URL encoded string."
