@@ -1,6 +1,6 @@
-# NO.IN.CORE [![Build Status](https://travis-ci.org/r0man/noincore.png)](https://travis-ci.org/r0man/noincore)
+# no.in.core [![Build Status](https://travis-ci.org/r0man/noincore.png)](https://travis-ci.org/r0man/noincore)
 
-Clojure and ClojureScript fns not in core.
+Clojure and ClojureScript functions not in core.
 
 ## Installation
 
