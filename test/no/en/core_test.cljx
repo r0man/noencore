@@ -52,15 +52,15 @@
     (is (= "localhost" (:server-name spec)))
     (is (= 3306 (:server-port spec)))
     (is (= "/example" (:uri spec))))
-  (let [spec (c/parse-url "postgresql://tiger:scotch@localhost/example?a=1&b=2")]
+  (let [spec (c/parse-url "postgresql://tiger:scotch@localhost/example?a=1&b=2&c=%2A")]
     (is (= :postgresql (:scheme spec)))
     (is (= "tiger" (:user spec)))
     (is (= "scotch" (:password spec)))
     (is (= "localhost" (:server-name spec)))
     (is (= 5432 (:server-port spec)))
     (is (= "/example" (:uri spec)))
-    (is (= "a=1&b=2" (:query-string spec)))
-    (is (= {:a "1", :b "2"} (:query-params spec))))
+    (is (= "a=1&b=2&c=%2A" (:query-string spec)))
+    (is (= {:a "1", :b "2" :c "*"} (:query-params spec))))
   (let [spec (c/parse-url "rabbitmq://tiger:scotch@localhost")]
     (is (= :rabbitmq (:scheme spec)))
     (is (= "tiger" (:user spec)))
