@@ -5,6 +5,11 @@
   #+clj (:import [java.net URLEncoder URLDecoder]
                  [org.apache.commons.codec.binary Base64]))
 
+(def port-number
+  {:mysql 3306
+   :postgresql 5432
+   :rabbitmq 5672})
+
 (def url-regex #"([^:]+)://(([^:]+):([^@]+)@)?(([^:/]+)(:([0-9]+))?((/[^?]*)(\?(.*))?)?)")
 
 (defn utf8-string
@@ -69,11 +74,12 @@
   "Parse the URL `s` as and return a Ring compatible map."
   [s]
   (if-let [matches (re-matches url-regex (str s))]
-    {:scheme (keyword (nth matches 1))
-     :user (nth matches 3)
-     :password (nth matches 4)
-     :server-name (nth matches 6)
-     :server-port (parse-integer (nth matches 8))
-     :uri (nth matches 10)
-     :query-params (parse-query-params  (nth matches 12))
-     :query-string (nth matches 12)}))
+    (let [scheme (keyword (nth matches 1))]
+      {:scheme scheme
+       :user (nth matches 3)
+       :password (nth matches 4)
+       :server-name (nth matches 6)
+       :server-port (or (parse-integer (nth matches 8)) (port-number scheme))
+       :uri (nth matches 10)
+       :query-params (parse-query-params  (nth matches 12))
+       :query-string (nth matches 12)})))
