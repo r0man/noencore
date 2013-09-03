@@ -16,7 +16,7 @@
   "Returns `bytes` as an UTF-8 encoded string."
   [bytes]
   #+clj (String. bytes "UTF-8")
-  #+cljs (throw (ex-info "Not implemented yet.")))
+  #+cljs (throw (ex-info "utf8-string not implemented yet" bytes)))
 
 (defn base64-encode
   "Returns `s` as a Base64 encoded string."
