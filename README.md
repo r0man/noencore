@@ -1,6 +1,6 @@
 # no.en.core [![Build Status](https://travis-ci.org/r0man/noencore.png)](https://travis-ci.org/r0man/noencore)
 
-Clojure and ClojureScript functions not in core.
+Clojure/ClojureScript functions not in core.
 
 ## Installation
 
