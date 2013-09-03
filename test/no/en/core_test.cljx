@@ -1,6 +1,6 @@
-(ns no.in.core-test
+(ns no.en.core-test
   #+cljs (:require-macros [cemerick.cljs.test :refer [deftest is are]])
-  (:require [no.in.core :as c]
+  (:require [no.en.core :as c]
             #+clj [clojure.test :refer :all]
             #+cljs [cemerick.cljs.test :as t]))
 

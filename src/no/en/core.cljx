@@ -1,4 +1,4 @@
-(ns no.in.core
+(ns no.en.core
   (:refer-clojure :exclude [replace])
   (:require [clojure.string :refer [replace]]
             #+cljs [goog.crypt.base64 :as base64])

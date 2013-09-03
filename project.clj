@@ -1,6 +1,6 @@
-(defproject noincore "0.1.0-SNAPSHOT"
+(defproject noencore "0.1.0-SNAPSHOT"
   :description "Clojure and ClojureScript fns not in core."
-  :url "http://github.com/r0man/noincore"
+  :url "http://github.com/r0man/noencore"
   :author "Roman Scherer"
   :min-lein-version "2.0.0"
   :license {:name "Eclipse Public License"
