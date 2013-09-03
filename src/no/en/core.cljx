@@ -61,7 +61,7 @@
   [s] (parse-number s #(#+clj Integer/parseInt #+cljs js/parseInt %1)))
 
 (defn parse-query-params
-  "Parse `s` as and return the query params in a map."
+  "Parse the query parameter string `s` and return a map."
   [s]
   (if s
     (->> (split (str s) #"&")
@@ -71,7 +71,7 @@
          (apply hash-map))))
 
 (defn parse-url
-  "Parse the URL `s` as and return a Ring compatible map."
+  "Parse the url `s` and return a Ring compatible map."
   [s]
   (if-let [matches (re-matches url-regex (str s))]
     (let [scheme (keyword (nth matches 1))]
