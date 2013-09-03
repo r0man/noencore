@@ -5,6 +5,8 @@
   #+clj (:import [java.net URLEncoder URLDecoder]
                  [org.apache.commons.codec.binary Base64]))
 
+(def url-regex #"([^:]+)://(([^:]+):([^@]+)@)?(([^:/]+)(:([0-9]+))?((/[^?]*)(\?(.*))?)?)")
+
 (defn utf8-string
   "Returns `bytes` as an UTF-8 encoded string."
   [bytes]
@@ -66,7 +68,7 @@
 (defn parse-url
   "Parse the URL `s` as and return a Ring compatible map."
   [s]
-  (if-let [matches (re-matches #"([^:]+)://(([^:]+):([^@]+)@)?(([^:/]+)(:([0-9]+))?((/[^?]*)(\?(.*))?)?)" (str s))]
+  (if-let [matches (re-matches url-regex (str s))]
     {:scheme (keyword (nth matches 1))
      :user (nth matches 3)
      :password (nth matches 4)
