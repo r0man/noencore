@@ -37,3 +37,35 @@
     "%20" " "
     "%2A" "*"
     "~" "~"))
+
+(deftest test-parse-query-params
+  (are [s expected]
+    (is (= expected (c/parse-query-params s)))
+    nil nil
+    "" {}
+    "a=1" {:a "1"}
+    "a=1&b=2&c=%2A" {:a "1" :b "2" :c "*"}))
+
+(deftest test-parse-url
+  (let [spec (c/parse-url "postgresql://localhost/example")]
+    (is (= :postgresql (:scheme spec)))
+    (is (= "localhost" (:server-name spec)))
+    (is (= "/example" (:uri spec))))
+  (let [spec (c/parse-url "postgresql://tiger:scotch@localhost:5432/example?a=1&b=2")]
+    (is (= :postgresql (:scheme spec)))
+    (is (= "tiger" (:user spec)))
+    (is (= "scotch" (:password spec)))
+    (is (= "localhost" (:server-name spec)))
+    (is (= 5432 (:server-port spec)))
+    (is (= "/example" (:uri spec)))
+    (is (= "a=1&b=2" (:query-string spec)))
+    (is (= {:a "1", :b "2"} (:query-params spec))))
+  (let [spec (c/parse-url "rabbitmq://tiger:scotch@localhost:5672")]
+    (is (= :rabbitmq (:scheme spec)))
+    (is (= "tiger" (:user spec)))
+    (is (= "scotch" (:password spec)))
+    (is (= "localhost" (:server-name spec)))
+    (is (= 5672 (:server-port spec)))
+    (is (nil? (:uri spec)))
+    (is (nil? (:query-params spec)))
+    (is (nil? (:query-string spec)))))
