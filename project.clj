@@ -1,4 +1,4 @@
-(defproject noincore "0.2.9-SNAPSHOT"
+(defproject noincore "0.1.0-SNAPSHOT"
   :description "Clojure and ClojureScript fns not in core."
   :url "http://github.com/r0man/noincore"
   :author "Roman Scherer"
@@ -6,8 +6,7 @@
   :license {:name "Eclipse Public License"
             :url "http://www.eclipse.org/legal/epl-v10.html"}
   :dependencies [[org.clojure/clojure "1.5.1"]
-                 [org.clojure/clojurescript "0.0-1853"]
-                 [com.cemerick/clojurescript.test "0.0.4"]]
+                 [org.clojure/clojurescript "0.0-1853"]]
   :profiles {:dev {:dependencies [[com.cemerick/clojurescript.test "0.0.4"]
                                   [com.keminglabs/cljx "0.3.0"]]
                    :repl-options {:nrepl-middleware [cemerick.piggieback/wrap-cljs-repl
@@ -30,7 +29,6 @@
                   {:source-paths ["test"]
                    :output-path "target/test-classes"
                    :rules :cljs}]}
-
   :cljsbuild {:test-commands {"phantom" ["runners/phantomjs.js" "target/testable.js"]}
               :builds [{:source-paths ["target/classes" "target/test-classes"]
                         :compiler {:output-to "target/testable.js"
