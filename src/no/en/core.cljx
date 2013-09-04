@@ -6,7 +6,9 @@
                  [org.apache.commons.codec.binary Base64]))
 
 (def port-number
-  {:mysql 3306
+  {:http 80
+   :https 443
+   :mysql 3306
    :postgresql 5432
    :rabbitmq 5672})
 
@@ -68,6 +70,21 @@
                      (url-encode (second %1))))
        (map #(join "=" %1))
        (join "&")))
+
+(defn format-url
+  "Format the Ring map as an url."
+  [m]
+  (str (name (:scheme m)) "://"
+       (let [{:keys [user password]} m]
+         (str (if user user)
+              (if password (str ":" password)) "@"))
+       (:server-name m)
+       (if-let [port (:server-port m)]
+         (if-not (= port (port-number (:scheme m)))
+           (str ":" port)))
+       (:uri m)
+       (if-let [query-params (:query-params m)]
+         (str "?" (format-query-params query-params)))))
 
 (defn parse-query-params
   "Parse the query parameter string `s` and return a map."

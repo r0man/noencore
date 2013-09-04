@@ -46,6 +46,15 @@
     "a=1" {:a "1"}
     "a=1&b=2&c=%2A" {:a "1" :b "2" :c "*"}))
 
+(deftest test-format-url
+  (are [s]
+    (is (= (dissoc (c/parse-url s) :query-string)
+           (dissoc (c/parse-url (c/format-url (c/parse-url s))) :query-string)))
+    "http://bob:secret@example.com"
+    "https://bob:secret@example.com/"
+    "https://bob:secret@example.com/?a=1&b=2"
+    "https://bob:secret@example.com/?a=1&b=2&c=%2A"))
+
 (deftest test-parse-url
   (let [spec (c/parse-url "mysql://localhost/example")]
     (is (= :mysql (:scheme spec)))
