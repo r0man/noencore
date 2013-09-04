@@ -24,7 +24,7 @@
   "Returns `s` as a Base64 encoded string."
   [s]
   (when s
-    #+clj (utf8-string (Base64/encodeBase64 (.getBytes s)))
+    #+clj (utf8-string (Base64/encodeBase64 (.getBytes (str s))))
     #+cljs (base64/encodeString s false)))
 
 (defn base64-decode
@@ -38,11 +38,11 @@
   "Returns `s` as an URL encoded string."
   [s & [encoding]]
   (when s
-    #+clj (-> (URLEncoder/encode s (or encoding "UTF-8"))
+    #+clj (-> (URLEncoder/encode (str s) (or encoding "UTF-8"))
               (replace "%7E" "~")
               (replace "*" "%2A")
               (replace "+" "%20"))
-    #+cljs (-> (js/encodeURIComponent s)
+    #+cljs (-> (js/encodeURIComponent (str s))
                (replace "*" "%2A"))))
 
 (defn url-decode

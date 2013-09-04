@@ -9,6 +9,7 @@
     (is (= expected (c/base64-encode s)))
     nil nil
     "" ""
+    1 "MQ=="
     "x" "eA=="))
 
 (deftest test-base64-decode
@@ -22,6 +23,7 @@
   (are [s expected]
     (is (= expected (c/url-encode s)))
     nil nil
+    1 "1"
     "" ""
     "a" "a"
     " " "%20"
@@ -34,17 +36,10 @@
     nil nil
     "" ""
     "a" "a"
+    "1" "1"
     "%20" " "
     "%2A" "*"
     "~" "~"))
-
-(deftest test-parse-query-params
-  (are [s expected]
-    (is (= expected (c/parse-query-params s)))
-    nil nil
-    "" {}
-    "a=1" {:a "1"}
-    "a=1&b=2&c=%2A" {:a "1" :b "2" :c "*"}))
 
 (deftest test-format-url
   (are [s]
@@ -54,6 +49,21 @@
     "https://bob:secret@example.com/"
     "https://bob:secret@example.com/?a=1&b=2"
     "https://bob:secret@example.com/?a=1&b=2&c=%2A"))
+
+(deftest test-format-query-params
+  (are [params expected]
+    (is (= expected (c/format-query-params params)))
+    {:a "1"} "a=1"
+    {:a 1} "a=1"
+    {:a 1 :b 2} "a=1&b=2"))
+
+(deftest test-parse-query-params
+  (are [s expected]
+    (is (= expected (c/parse-query-params s)))
+    nil nil
+    "" {}
+    "a=1" {:a "1"}
+    "a=1&b=2&c=%2A" {:a "1" :b "2" :c "*"}))
 
 (deftest test-parse-url
   (let [spec (c/parse-url "mysql://localhost/example")]
