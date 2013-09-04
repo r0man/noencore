@@ -76,8 +76,7 @@
   [m]
   (str (name (:scheme m)) "://"
        (let [{:keys [user password]} m]
-         (str (if user user)
-              (if password (str ":" password)) "@"))
+         (if user (str (if user user) (if password (str ":" password)) "@")))
        (:server-name m)
        (if-let [port (:server-port m)]
          (if-not (= port (port-number (:scheme m)))

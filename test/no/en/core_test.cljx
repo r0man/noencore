@@ -45,6 +45,8 @@
   (are [s]
     (is (= (dissoc (c/parse-url s) :query-string)
            (dissoc (c/parse-url (c/format-url (c/parse-url s))) :query-string)))
+    "http://example.com"
+    "https://example.com"
     "http://bob:secret@example.com"
     "https://bob:secret@example.com/"
     "https://bob:secret@example.com/?a=1&b=2"
