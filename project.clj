@@ -10,7 +10,7 @@
                  [org.clojure/clojurescript "0.0-1853"]]
   :profiles {:dev {:dependencies [[com.cemerick/clojurescript.test "0.0.4"]
                                   [com.keminglabs/cljx "0.3.0"]]
-                   :plugins [[com.cemerick/austin "0.1.0"]]
+                   :plugins [[com.cemerick/austin "0.1.1"]]
                    :repl-options {:nrepl-middleware [cljx.repl-middleware/wrap-cljx]}}}
   :plugins [[com.keminglabs/cljx "0.3.0"]
             [lein-cljsbuild "0.3.2"]]
