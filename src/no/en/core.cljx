@@ -108,3 +108,25 @@
        :uri (nth matches 10)
        :query-params (parse-query-params  (nth matches 12))
        :query-string (nth matches 12)})))
+
+(defn with-retries*
+  "Executes thunk. If an exception is thrown, will retry. At most n retries
+  are done. If still some exception is thrown it is bubbled upwards in
+  the call chain."
+  [n thunk]
+  (loop [n n]
+    (if-let [result
+             (try
+               [(thunk)]
+               (catch #+clj Exception #+cljs js/Error e
+                      (when (zero? n)
+                        (throw e))))]
+      (result 0)
+      (recur (dec n)))))
+
+(defmacro with-retries
+  "Executes body. If an exception is thrown, will retry. At most n retries
+  are done. If still some exception is thrown it is bubbled upwards in
+  the call chain."
+  [n & body]
+  `(no.en.core/with-retries* ~n (fn [] ~@body)))

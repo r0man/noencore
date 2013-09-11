@@ -1,7 +1,9 @@
 (ns no.en.core-test
-  #+cljs (:require-macros [cemerick.cljs.test :refer [deftest is are]])
+  #+cljs (:require-macros [cemerick.cljs.test :refer [deftest is are]]
+                          [no.en.core :refer [with-retries]])
   (:require [no.en.core :as c]
             #+clj [clojure.test :refer :all]
+            #+clj [no.en.core :refer [with-retries]]
             #+cljs [cemerick.cljs.test :as t]))
 
 (deftest test-base64-encode
@@ -91,3 +93,15 @@
     (is (nil? (:uri spec)))
     (is (nil? (:query-params spec)))
     (is (nil? (:query-string spec)))))
+
+(deftest test-with-retries
+  (let [count (atom 0)]
+    (with-retries 10
+      (swap! count inc))
+    (is (= 1 @count)))
+  (let [count (atom 0)]
+    (try (with-retries 10
+           (swap! count inc)
+           (throw (ex-info "boom" {})))
+         (catch #+clj Exception #+cljs js/Error _ nil))
+    (is (= 11 @count))))
