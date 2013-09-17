@@ -1,6 +1,8 @@
 (ns no.en.core
-  (:refer-clojure :exclude [replace])
-  (:require [clojure.string :refer [join replace split]]
+  (:refer-clojure :exclude [replace read-string])
+  (:require [clojure.string :refer [join replace split upper-case]]
+            #+clj [clojure.edn :refer [read-string]]
+            #+cljs [cljs.reader :refer [read-string]]
             #+cljs [goog.crypt.base64 :as base64])
   #+clj (:import [java.net URLEncoder URLDecoder]
                  [org.apache.commons.codec.binary Base64]))
@@ -52,15 +54,64 @@
     #+clj (URLDecoder/decode s (or encoding "UTF-8"))
     #+cljs (js/decodeURIComponent s)))
 
-(defn- parse-number [s f]
-  #+clj (try (f (str s))
-             (catch NumberFormatException _ nil))
-  #+cljs (let [n (f (str s))]
-           (if-not (js/isNaN n) n)))
+(defn pow [n x]
+  #+clj (Math/pow n x)
+  #+cljs (.pow js/Math n x))
+
+(def byte-scale
+  {"B" (pow 1024 0)
+   "K" (pow 1024 1)
+   "M" (pow 1024 2)
+   "G" (pow 1024 3)
+   "T" (pow 1024 4)
+   "P" (pow 1024 5)
+   "E" (pow 1024 6)
+   "Z" (pow 1024 7)
+   "Y" (pow 1024 8)})
+
+(defn- apply-unit [number unit]
+  (if (string? unit)
+    (case (upper-case unit)
+      (case unit
+        "M" (* number 1000000)
+        "B" (* number 1000000000)))
+    number))
+
+(defn- parse-number [s parse-fn]
+  (if-let [matches (re-matches #"\s*([-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?)(M|B)?.*" (str s))]
+    #+clj
+    (try (let [number (parse-fn (nth matches 1))
+               unit (nth matches 3)]
+           (apply-unit number unit))
+         (catch NumberFormatException _ nil))
+    #+cljs
+    (let [number (parse-fn (nth matches 1))
+          unit (nth matches 3)]
+      (if-not (js/isNaN number)
+        (apply-unit number unit)))))
+
+(defn parse-bytes [s]
+  (if-let [matches (re-matches #"\s*([-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?)(B|K|M|G|T|P|E|Z|Y)?.*" (str s))]
+    (let [number (read-string (nth matches 1))
+          unit (nth matches 3)]
+      (* (read-string (nth matches 1))
+         (get byte-scale (upper-case (or unit "")) 1)))))
 
 (defn parse-integer
   "Parse `s` as a integer number."
   [s] (parse-number s #(#+clj Integer/parseInt #+cljs js/parseInt %1)))
+
+(defn parse-long
+  "Parse `s` as a long number."
+  [s] (parse-number s #(#+clj Long/parseLong #+cljs js/parseInt %1)))
+
+(defn parse-double
+  "Parse `s` as a double number."
+  [s] (parse-number s #(#+clj Double/parseDouble #+cljs js/parseFloat %1)))
+
+(defn parse-float
+  "Parse `s` as a float number."
+  [s] (parse-number s #(#+clj Float/parseFloat %1 #+cljs js/parseFloat)))
 
 (defn format-query-params
   "Format the map `m` into a query parameter string."
@@ -84,6 +135,20 @@
        (:uri m)
        (if-let [query-params (:query-params m)]
          (str "?" (format-query-params query-params)))))
+
+(defn parse-percent
+  "Parse `s` as a percentage."
+  [s] (parse-double (replace s "%" "")))
+
+(defn pattern-quote
+  "Quote the special characters in `s` that are used in regular expressions."
+  [s] (replace (name s) #"([\[\]\^\$\|\(\)\\\+\*\?\{\}\=\!.])" "\\\\$1"))
+
+(defn separator
+  "Returns the first string that separates the components in `s`."
+  [s]
+  (if-let [matches (re-matches #"(?i)([a-z0-9_-]+)([^a-z0-9_-]+).*" s)]
+    (nth matches 2)))
 
 (defn parse-query-params
   "Parse the query parameter string `s` and return a map."

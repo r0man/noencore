@@ -105,3 +105,81 @@
            (throw (ex-info "boom" {})))
          (catch #+clj Exception #+cljs js/Error _ nil))
     (is (= 11 @count))))
+
+(deftest test-parse-bytes
+  (is (nil? (c/parse-bytes nil)))
+  (is (nil? (c/parse-bytes "")))
+  (is (= 1 (c/parse-bytes "1")))
+  (is (= 1.0 (c/parse-bytes "1B")))
+  (is (= 1.0 (c/parse-bytes "1.0B")))
+  (is (= 10.0 (c/parse-bytes "10.0")))
+  (is (= -10.0 (c/parse-bytes "-10.0")))
+  (is (= 1024.0 (c/parse-bytes "1K")))
+  (is (= 1048576.0 (c/parse-bytes "1M")))
+  (is (= 1048576.0 (c/parse-bytes "1.0M"))))
+
+(deftest test-parse-double
+  (is (nil? (c/parse-double nil)))
+  (is (nil? (c/parse-double "")))
+  (is (= 1.0 (c/parse-double "1")))
+  (is (= 10.0 (c/parse-double "10.0")))
+  (is (= -10.0 (c/parse-double "-10.0")))
+  (is (= 1000000.0 (c/parse-double "1M")))
+  (is (= 1000000.0 (c/parse-double "1.0M")))
+  (is (= 1000000000.0 (c/parse-double "1B")))
+  (is (= 1000000000.0 (c/parse-double "1.0B"))))
+
+;; (deftest test-parse-float
+;;   (is (nil? (c/parse-float nil)))
+;;   (is (nil? (c/parse-float "")))
+;;   (is (= 1.0 (c/parse-float "1")))
+;;   (is (= 10.0 (c/parse-float "10.0")))
+;;   (is (= -10.0 (c/parse-float "-10.0")))
+;;   (is (= 1000000.0 (c/parse-float "1M")))
+;;   (is (= 1000000.0 (c/parse-float "1.0M")))
+;;   (is (= 1000000000.0 (c/parse-float "1B")))
+;;   (is (= 1000000000.0 (c/parse-float "1.0B"))) )
+
+(deftest test-parse-integer
+  (is (nil? (c/parse-integer nil)))
+  (is (nil? (c/parse-integer "")))
+  #+clj (is (nil? (c/parse-integer "1.1")))
+  #+cljs (is (= 1 (c/parse-integer "1.1")))
+  (is (= 1 (c/parse-integer "1")))
+  (is (= 1 (c/parse-integer "1-europe")))
+  (is (= 10 (c/parse-integer "10")))
+  (is (= -10 (c/parse-integer "-10")))
+  (is (= 1000000 (c/parse-integer "1M")))
+  (is (= 1000000000 (c/parse-integer "1B"))))
+
+(deftest test-parse-long
+  (is (nil? (c/parse-long nil)))
+  (is (nil? (c/parse-long "")))
+  #+clj (is (nil? (c/parse-long "1.1")))
+  #+cljs (is (= 1 (c/parse-long "1.1")))
+  (is (= 1 (c/parse-long "1")))
+  (is (= 1 (c/parse-long "1-europe")))
+  (is (= 10 (c/parse-long "10")))
+  (is (= -10 (c/parse-long "-10")))
+  (is (= 1000000 (c/parse-long "1M")))
+  (is (= 1000000000 (c/parse-long "1B"))))
+
+(deftest test-parse-percent
+  (are [string expected]
+    (is (= expected (c/parse-percent string)))
+    "+18.84" 18.84
+    "+18.84%" 18.84))
+
+(deftest test-pattern-quote
+  (is (= "1" (c/pattern-quote "1")))
+  (is (= "x" (c/pattern-quote "x")))
+  ;; (is (= "\\." (c/pattern-quote ".")))
+  ;; (is (= "\\[" (c/pattern-quote "[")))
+  ;; (is (= "a\\.b\\.c" (c/pattern-quote "a.b.c")))
+  )
+
+(deftest test-separator
+  (is (nil? (c/separator "Message")))
+  (is (= "." (c/separator "twitter.hash-tags")))
+  (is (= "." (c/separator "twitter.users")))
+  (is (= "::" (c/separator "Admin::Post"))))
