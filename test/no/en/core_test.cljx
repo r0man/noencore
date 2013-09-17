@@ -129,16 +129,16 @@
   (is (= 1000000000.0 (c/parse-double "1B")))
   (is (= 1000000000.0 (c/parse-double "1.0B"))))
 
-;; (deftest test-parse-float
-;;   (is (nil? (c/parse-float nil)))
-;;   (is (nil? (c/parse-float "")))
-;;   (is (= 1.0 (c/parse-float "1")))
-;;   (is (= 10.0 (c/parse-float "10.0")))
-;;   (is (= -10.0 (c/parse-float "-10.0")))
-;;   (is (= 1000000.0 (c/parse-float "1M")))
-;;   (is (= 1000000.0 (c/parse-float "1.0M")))
-;;   (is (= 1000000000.0 (c/parse-float "1B")))
-;;   (is (= 1000000000.0 (c/parse-float "1.0B"))) )
+(deftest test-parse-float
+  (is (nil? (c/parse-float nil)))
+  (is (nil? (c/parse-float "")))
+  (is (= 1.0 (c/parse-float "1")))
+  (is (= 10.0 (c/parse-float "10.0")))
+  (is (= -10.0 (c/parse-float "-10.0")))
+  (is (= 1000000.0 (c/parse-float "1M")))
+  (is (= 1000000.0 (c/parse-float "1.0M")))
+  (is (= 1000000000.0 (c/parse-float "1B")))
+  (is (= 1000000000.0 (c/parse-float "1.0B"))) )
 
 (deftest test-parse-integer
   (is (nil? (c/parse-integer nil)))
@@ -173,10 +173,9 @@
 (deftest test-pattern-quote
   (is (= "1" (c/pattern-quote "1")))
   (is (= "x" (c/pattern-quote "x")))
-  ;; (is (= "\\." (c/pattern-quote ".")))
-  ;; (is (= "\\[" (c/pattern-quote "[")))
-  ;; (is (= "a\\.b\\.c" (c/pattern-quote "a.b.c")))
-  )
+  #+clj (is (= "\\." (c/pattern-quote ".")))
+  #+clj (is (= "\\[" (c/pattern-quote "[")))
+  #+clj (is (= "a\\.b\\.c" (c/pattern-quote "a.b.c"))))
 
 (deftest test-separator
   (is (nil? (c/separator "Message")))

@@ -111,7 +111,7 @@
 
 (defn parse-float
   "Parse `s` as a float number."
-  [s] (parse-number s #(#+clj Float/parseFloat %1 #+cljs js/parseFloat)))
+  [s] (parse-number s #(#+clj Float/parseFloat #+cljs js/parseFloat %1)))
 
 (defn format-query-params
   "Format the map `m` into a query parameter string."
