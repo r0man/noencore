@@ -3,11 +3,12 @@
   :url "http://github.com/r0man/noencore"
   :author "Roman Scherer"
   :min-lein-version "2.0.0"
+  :lein-release {:deploy-via :clojars}
   :license {:name "Eclipse Public License"
             :url "http://www.eclipse.org/legal/epl-v10.html"}
   :dependencies [[commons-codec/commons-codec "1.8"]
                  [org.clojure/clojure "1.5.1"]
-                 [org.clojure/clojurescript "0.0-1889"]]
+                 [org.clojure/clojurescript "0.0-1909"]]
   :profiles {:dev {:dependencies [[com.cemerick/clojurescript.test "0.0.4"]
                                   [com.keminglabs/cljx "0.3.0"]]
                    :plugins [[com.cemerick/austin "0.1.1"]]
@@ -33,5 +34,4 @@
                                    :libs [""]
                                    :optimizations :advanced
                                    :pretty-print true}}]}
-  :test-paths ["target/test-classes"]
-  :lein-release {:deploy-via :clojars})
+  :test-paths ["target/test-classes"])
