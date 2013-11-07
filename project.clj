@@ -8,8 +8,8 @@
             :url "http://www.eclipse.org/legal/epl-v10.html"}
   :dependencies [[commons-codec/commons-codec "1.8"]
                  [org.clojure/clojure "1.5.1"]
-                 [org.clojure/clojurescript "0.0-1934"]]
-  :profiles {:dev {:dependencies [[com.keminglabs/cljx "0.3.0"]]
+                 [org.clojure/clojurescript "0.0-2014"]]
+  :profiles {:dev {:dependencies [[com.keminglabs/cljx "0.3.1"]]
                    :plugins [[com.cemerick/austin "0.1.1"]]
                    :repl-options {:nrepl-middleware [cljx.repl-middleware/wrap-cljx]}}}
   :plugins [[com.cemerick/clojurescript.test "0.1.0"]
