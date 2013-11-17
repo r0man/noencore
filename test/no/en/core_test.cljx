@@ -7,18 +7,23 @@
             #+cljs [cemerick.cljs.test :as t]))
 
 (deftest test-base64-encode
+  (is (nil? (c/base64-encode nil)))
   (are [s expected]
-    (is (= expected (c/base64-encode s)))
-    nil nil
+    (is (= expected
+           #+clj (c/base64-encode (.getBytes s))
+           #+cljs (c/base64-encode s)))
     "" ""
-    1 "MQ=="
+    "1" "MQ=="
     "x" "eA=="))
 
 (deftest test-base64-decode
+  (is (nil? (c/base64-decode nil)))
   (are [s expected]
-    (is (= expected (c/base64-decode s)))
-    nil nil
+    (is (= expected
+           #+clj (String. (c/base64-decode s))
+           #+cljs (c/base64-decode s)))
     "" ""
+    "MQ==" "1"
     "eA==" "x"))
 
 (deftest test-url-encode

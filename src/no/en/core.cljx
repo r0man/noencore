@@ -24,16 +24,16 @@
 
 (defn base64-encode
   "Returns `s` as a Base64 encoded string."
-  [s]
-  (when s
-    #+clj (utf8-string (Base64/encodeBase64 (.getBytes (str s))))
-    #+cljs (base64/encodeString s false)))
+  [bytes]
+  (when bytes
+    #+clj (String. (Base64/encodeBase64 bytes))
+    #+cljs (base64/encodeString bytes false)))
 
 (defn base64-decode
   "Returns `s` as a Base64 decoded string."
   [s]
   (when s
-    #+clj (utf8-string (Base64/decodeBase64 (.getBytes s)))
+    #+clj (Base64/decodeBase64 (.getBytes s))
     #+cljs (base64/decodeString s false)))
 
 (defn url-encode
