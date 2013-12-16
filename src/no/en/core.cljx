@@ -94,8 +94,8 @@
   (if-let [matches (re-matches #"\s*([-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?)(B|K|M|G|T|P|E|Z|Y)?.*" (str s))]
     (let [number (read-string (nth matches 1))
           unit (nth matches 3)]
-      (* (read-string (nth matches 1))
-         (get byte-scale (upper-case (or unit "")) 1)))))
+      (long (* (long (read-string (str (nth matches 1))))
+               (get byte-scale (upper-case (or unit "")) 1))))))
 
 (defn parse-integer
   "Parse `s` as a integer number."
