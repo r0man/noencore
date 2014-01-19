@@ -1,6 +1,6 @@
 (ns no.en.core
   (:refer-clojure :exclude [replace read-string])
-  (:require [clojure.string :refer [join replace split upper-case]]
+  (:require [clojure.string :refer [blank? join replace split upper-case]]
             #+clj [clojure.edn :refer [read-string]]
             #+cljs [cljs.reader :refer [read-string]]
             #+cljs [goog.crypt.base64 :as base64])
@@ -116,11 +116,14 @@
 (defn format-query-params
   "Format the map `m` into a query parameter string."
   [m]
-  (->> (seq m)
-       (map #(vector (url-encode (name (first %1)))
-                     (url-encode (second %1))))
-       (map #(join "=" %1))
-       (join "&")))
+  (let [params (->> (seq m)
+                    (remove #(blank? (str (second %1))))
+                    (map #(vector (url-encode (name (first %1)))
+                                  (url-encode (second %1))))
+                    (map #(join "=" %1))
+                    (join "&"))]
+    (if-not (blank? params)
+      params)))
 
 (defn format-url
   "Format the Ring map as an url."

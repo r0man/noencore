@@ -62,6 +62,8 @@
 (deftest test-format-query-params
   (are [params expected]
     (is (= expected (c/format-query-params params)))
+    nil nil
+    {:a nil} nil
     {:a "1"} "a=1"
     {:a 1} "a=1"
     {:a 1 :b 2} "a=1&b=2"))
