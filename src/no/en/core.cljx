@@ -16,6 +16,17 @@
 
 (def url-regex #"([^:]+)://(([^:]+):([^@]+)@)?(([^:/]+)(:([0-9]+))?((/[^?]*)(\?(.*))?)?)")
 
+(defn split-by-regex
+  "Split the string `s` by the regex `pattern`."
+  [s pattern]
+  (if (sequential? s)
+    s (if-not (blank? s)
+        (split s pattern))))
+
+(defn split-by-comma
+  "Split the string `s` by comma."
+  [s] (split-by-regex s #"\s*,\s*"))
+
 (defn utf8-string
   "Returns `bytes` as an UTF-8 encoded string."
   [bytes]

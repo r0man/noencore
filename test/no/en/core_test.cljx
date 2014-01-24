@@ -189,3 +189,17 @@
   (is (= "." (c/separator "twitter.hash-tags")))
   (is (= "." (c/separator "twitter.users")))
   (is (= "::" (c/separator "Admin::Post"))))
+
+(deftest test-split-by-regex
+  (let [s "1,2,3"]
+    (is (= ["1" "2" "3"]
+           (c/split-by-regex s #",")
+           (c/split-by-regex s #"\s*,\s*")))))
+
+(deftest test-split-by-comma
+  (is (nil? (c/split-by-comma nil)))
+  (is (nil? (c/split-by-comma "")))
+  (is (nil? (c/split-by-comma " ")))
+  (is (= ["x"] (c/split-by-comma "x")))
+  (is (= ["1" "2" "3"] (c/split-by-comma "1,2,3")))
+  (is (= ["1" "2" "3"] (c/split-by-comma ["1" "2" "3"]))))
