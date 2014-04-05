@@ -26,6 +26,17 @@
     "MQ==" "1"
     "eA==" "x"))
 
+(deftest test-compact-map
+  (are [x expected]
+    (is (= expected (c/compact-map x)))
+    nil nil
+    {} {}
+    {:x nil} {}
+    {:x []} {}
+    {:x {}} {}
+    {:x ["x"]} {:x ["x"]}
+    {:x {:a 1}} {:x {:a 1}}))
+
 (deftest test-url-encode
   (are [s expected]
     (is (= expected (c/url-encode s)))
@@ -52,9 +63,9 @@
   (are [s]
     (is (= (dissoc (c/parse-url s) :query-string)
            (dissoc (c/parse-url (c/format-url (c/parse-url s))) :query-string)))
-    "http://example.com"
-    "https://example.com"
-    "http://bob:secret@example.com"
+    "http://example.com/"
+    "https://example.com/"
+    "http://bob:secret@example.com/"
     "https://bob:secret@example.com/"
     "https://bob:secret@example.com/?a=1&b=2"
     "https://bob:secret@example.com/?a=1&b=2&c=%2A"))
@@ -77,6 +88,16 @@
     "a=1&b=2&c=%2A" {:a "1" :b "2" :c "*"}))
 
 (deftest test-parse-url
+  (let [spec (c/parse-url "https://example.com")]
+    (is (= :https (:scheme spec)))
+    (is (= "example.com" (:server-name spec)))
+    (is (= 443 (:server-port spec)))
+    (is (nil? (:uri spec))))
+  (let [spec (c/parse-url "https://example.com/")]
+    (is (= :https (:scheme spec)))
+    (is (= "example.com" (:server-name spec)))
+    (is (= 443 (:server-port spec)))
+    (is (= "/" (:uri spec))))
   (let [spec (c/parse-url "mysql://localhost/example")]
     (is (= :mysql (:scheme spec)))
     (is (= "localhost" (:server-name spec)))
