@@ -14,7 +14,7 @@
    :postgresql 5432
    :rabbitmq 5672})
 
-(def url-regex #"([^:]+)://(([^:]+):([^@]+)@)?(([^:/]+)(:([0-9]+))?((/[^?]*)(\?(.*))?)?)")
+(def url-regex #"([^:]+)://(([^:]+):([^@]+)@)?(([^:/]+)(:([0-9]+))?((/[^?]*)(\?([^#]*))?)?)(\#(.*))?")
 
 (defn split-by-regex
   "Split the string `s` by the regex `pattern`."
@@ -164,7 +164,9 @@
                   (not (empty? query-params)))
            "/" (:uri m))
          (if-not (empty? query-params)
-           (str "?" (format-query-params query-params))))))
+           (str "?" (format-query-params query-params)))
+         (if-not (blank? (:fragment m))
+           (str "#" (:fragment m))))))
 
 (defn parse-percent
   "Parse `s` as a percentage."
@@ -203,7 +205,8 @@
         :server-port (or (parse-integer (nth matches 8)) (port-number scheme))
         :uri (nth matches 10)
         :query-params (parse-query-params  (nth matches 12))
-        :query-string (nth matches 12)}))))
+        :query-string (nth matches 12)
+        :fragment (nth matches 14)}))))
 
 (defn with-retries*
   "Executes thunk. If an exception is thrown, will retry. At most n retries

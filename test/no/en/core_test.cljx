@@ -68,7 +68,8 @@
     "http://bob:secret@example.com/"
     "https://bob:secret@example.com/"
     "https://bob:secret@example.com/?a=1&b=2"
-    "https://bob:secret@example.com/?a=1&b=2&c=%2A"))
+    "https://bob:secret@example.com/?a=1&b=2&c=%2A"
+    "https://bob:secret@example.com/?a=1&b=2&c=%2A#_=_"))
 
 (deftest test-format-query-params
   (are [params expected]
@@ -120,7 +121,17 @@
     (is (= 5672 (:server-port spec)))
     (is (nil? (:uri spec)))
     (is (nil? (:query-params spec)))
-    (is (nil? (:query-string spec)))))
+    (is (nil? (:query-string spec))))
+  (let [spec (c/parse-url "http://example.com/?mode=dev&access-token=e3ff052a0b32fd3309bdf6534115e25a#_=_")]
+    (is (= :http (:scheme spec)))
+    (is (= "example.com" (:server-name spec)))
+    (is (= 80 (:server-port spec)))
+    (is (= "/" (:uri spec)))
+    (is (= {:mode "dev", :access-token "e3ff052a0b32fd3309bdf6534115e25a"}
+           (:query-params spec)))
+    (is (= "mode=dev&access-token=e3ff052a0b32fd3309bdf6534115e25a"
+           (:query-string spec)))
+    (is (= "_=_" (:fragment spec)))))
 
 (deftest test-with-retries
   (let [count (atom 0)]
