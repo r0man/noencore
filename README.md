@@ -9,8 +9,10 @@ Clojure/ClojureScript functions not in core.
 
 Via Clojars: http://clojars.org/noencore
 
+[![Current Version](https://clojars.org/noencore/latest-version.svg)](https://clojars.org/noencore)
+
 ## License
 
-Copyright (C) 2013 Roman Scherer
+Copyright (C) 2013-2014 Roman Scherer
 
 Distributed under the Eclipse Public License, the same as Clojure.
