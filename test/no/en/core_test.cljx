@@ -60,6 +60,7 @@
     "~" "~"))
 
 (deftest test-format-url
+  (is (nil? (c/format-url nil)))
   (are [s]
     (is (= (dissoc (c/parse-url s) :query-string)
            (dissoc (c/parse-url (c/format-url (c/parse-url s))) :query-string)))

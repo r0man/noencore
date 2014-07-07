@@ -152,21 +152,23 @@
 (defn format-url
   "Format the Ring map as an url."
   [m]
-  (let [query-params (:query-params m)]
-    (str (name (:scheme m)) "://"
-         (let [{:keys [user password]} m]
-           (if user (str (if user user) (if password (str ":" password)) "@")))
-         (:server-name m)
-         (if-let [port (:server-port m)]
-           (if-not (= port (port-number (:scheme m)))
-             (str ":" port)))
-         (if (and (nil? (:uri m))
-                  (not (empty? query-params)))
-           "/" (:uri m))
-         (if-not (empty? query-params)
-           (str "?" (format-query-params query-params)))
-         (if-not (blank? (:fragment m))
-           (str "#" (:fragment m))))))
+  (if (not (empty? m))
+    (let [query-params (:query-params m)]
+      (str (if (:scheme m)
+             (str (name (:scheme m)) "://"))
+           (let [{:keys [user password]} m]
+             (if user (str (if user user) (if password (str ":" password)) "@")))
+           (:server-name m)
+           (if-let [port (:server-port m)]
+             (if-not (= port (port-number (:scheme m)))
+               (str ":" port)))
+           (if (and (nil? (:uri m))
+                    (not (empty? query-params)))
+             "/" (:uri m))
+           (if-not (empty? query-params)
+             (str "?" (format-query-params query-params)))
+           (if-not (blank? (:fragment m))
+             (str "#" (:fragment m)))))))
 
 (defn parse-percent
   "Parse `s` as a percentage."
