@@ -3,10 +3,10 @@
   :url "http://github.com/r0man/noencore"
   :author "r0man"
   :min-lein-version "2.0.0"
-  :lein-release {:deploy-via :clojars}
   :license {:name "Eclipse Public License"
             :url "http://www.eclipse.org/legal/epl-v10.html"}
   :dependencies [[commons-codec/commons-codec "1.9"]]
+  :deploy-repositories [["releases" :clojars]]
   :cljsbuild {:builds []}
   :profiles {:dev {:dependencies [[org.clojure/clojure "1.6.0"]
                                   [org.clojure/clojurescript "0.0-2234"]]
