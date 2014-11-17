@@ -5,15 +5,15 @@
   :min-lein-version "2.0.0"
   :license {:name "Eclipse Public License"
             :url "http://www.eclipse.org/legal/epl-v10.html"}
-  :dependencies [[commons-codec/commons-codec "1.9"]]
+  :dependencies [[commons-codec/commons-codec "1.10"]
+                 [org.clojure/clojure "1.6.0"]
+                 [org.clojure/clojurescript "0.0-2371" :scope "provided"]]
   :deploy-repositories [["releases" :clojars]]
   :cljsbuild {:builds []}
-  :profiles {:dev {:dependencies [[org.clojure/clojure "1.6.0"]
-                                  [org.clojure/clojurescript "0.0-2234"]]
-                   :repl-options {:nrepl-middleware [cljx.repl-middleware/wrap-cljx]}
+  :profiles {:dev {:repl-options {:nrepl-middleware [cljx.repl-middleware/wrap-cljx]}
                    :plugins [[com.keminglabs/cljx "0.3.2"] ;; Must be before Austin: https://github.com/cemerick/austin/issues/37
-                             [com.cemerick/clojurescript.test "0.3.0"]
-                             [com.cemerick/austin "0.1.3"]
+                             [com.cemerick/clojurescript.test "0.3.1"]
+                             [com.cemerick/austin "0.1.5"]
                              [lein-cljsbuild "1.0.3"]]
                    :hooks [cljx.hooks leiningen.cljsbuild]
                    :cljx {:builds [{:source-paths ["src"]
