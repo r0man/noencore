@@ -79,7 +79,7 @@
     {:a nil} nil
     {:a "1"} "a=1"
     {:a 1} "a=1"
-    {:a 1 :b 2} #+clj "b=2&a=1" #+cljs "a=1&b=2"))
+    {:a 1 :b 2} "a=1&b=2"))
 
 (deftest test-parse-query-params
   (are [s expected]

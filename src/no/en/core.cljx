@@ -140,7 +140,7 @@
 (defn format-query-params
   "Format the map `m` into a query parameter string."
   [m]
-  (let [params (->> (seq m)
+  (let [params (->> (sort-by first (seq m))
                     (remove #(blank? (str (second %1))))
                     (map #(vector (url-encode (name (first %1)))
                                   (url-encode (second %1))))
