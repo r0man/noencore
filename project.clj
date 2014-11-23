@@ -8,30 +8,31 @@
   :dependencies [[commons-codec/commons-codec "1.10"]
                  [org.clojure/clojure "1.6.0"]
                  [org.clojure/clojurescript "0.0-2371" :scope "provided"]]
+  :cljx {:builds [{:source-paths ["src"]
+                   :output-path "target/classes"
+                   :rules :clj}
+                  {:source-paths ["src"]
+                   :output-path "target/classes"
+                   :rules :cljs}
+                  {:source-paths ["test"]
+                   :output-path "target/test-classes"
+                   :rules :clj}
+                  {:source-paths ["test"]
+                   :output-path "target/test-classes"
+                   :rules :cljs}]}
   :deploy-repositories [["releases" :clojars]]
-  :cljsbuild {:builds []}
-  :profiles {:dev {:repl-options {:nrepl-middleware [cljx.repl-middleware/wrap-cljx]}
-                   :plugins [[com.keminglabs/cljx "0.3.2"] ;; Must be before Austin: https://github.com/cemerick/austin/issues/37
+  :prep-tasks [["cljx" "once"]]
+  :profiles {:dev {:plugins [[com.cemerick/austin "0.1.5"]
+                             [org.clojars.cemerick/cljx "0.5.0-SNAPSHOT" :exclusions [org.clojure/clojure]]
                              [com.cemerick/clojurescript.test "0.3.1"]
-                             [com.cemerick/austin "0.1.5"]
                              [lein-cljsbuild "1.0.3"]]
-                   :hooks [cljx.hooks leiningen.cljsbuild]
-                   :cljx {:builds [{:source-paths ["src"]
-                                    :output-path "target/classes"
-                                    :rules :clj}
-                                   {:source-paths ["src"]
-                                    :output-path "target/classes"
-                                    :rules :cljs}
-                                   {:source-paths ["test"]
-                                    :output-path "target/test-classes"
-                                    :rules :clj}
-                                   {:source-paths ["test"]
-                                    :output-path "target/test-classes"
-                                    :rules :cljs}]}
+                   :hooks [leiningen.cljsbuild]
                    :cljsbuild {:test-commands {"node" ["node" :node-runner "target/testable.js"]
                                                "phantom" ["phantomjs" :runner "target/testable.js"]}
                                :builds [{:source-paths ["target/classes" "target/test-classes"]
                                          :compiler {:output-to "target/testable.js"
                                                     :optimizations :advanced
                                                     :pretty-print true}}]}
-                   :test-paths ["target/test-classes"]}})
+                   :repl-options {:nrepl-middleware [cljx.repl-middleware/wrap-cljx]}
+                   :test-paths ["target/test-classes"]}
+             :test {:prep-tasks [["cljsbuild" "once"]]}})
