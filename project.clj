@@ -20,6 +20,12 @@
                   {:source-paths ["test"]
                    :output-path "target/test-classes"
                    :rules :cljs}]}
+  :cljsbuild {:test-commands {"node" ["node" :node-runner "target/testable.js"]
+                              "phantom" ["phantomjs" :runner "target/testable.js"]}
+              :builds [{:source-paths ["target/classes" "target/test-classes"]
+                        :compiler {:output-to "target/testable.js"
+                                   :optimizations :advanced
+                                   :pretty-print true}}]}
   :deploy-repositories [["releases" :clojars]]
   :prep-tasks [["cljx" "once"]]
   :profiles {:dev {:plugins [[com.cemerick/austin "0.1.5"]
@@ -27,12 +33,6 @@
                              [com.cemerick/clojurescript.test "0.3.1"]
                              [lein-cljsbuild "1.0.3"]]
                    :hooks [leiningen.cljsbuild]
-                   :cljsbuild {:test-commands {"node" ["node" :node-runner "target/testable.js"]
-                                               "phantom" ["phantomjs" :runner "target/testable.js"]}
-                               :builds [{:source-paths ["target/classes" "target/test-classes"]
-                                         :compiler {:output-to "target/testable.js"
-                                                    :optimizations :advanced
-                                                    :pretty-print true}}]}
                    :repl-options {:nrepl-middleware [cljx.repl-middleware/wrap-cljx]}
                    :test-paths ["target/test-classes"]}
              :test {:prep-tasks [["cljsbuild" "once"]]}})
