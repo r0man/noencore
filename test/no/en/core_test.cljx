@@ -236,3 +236,15 @@
   (is (= ["x"] (c/split-by-comma "x")))
   (is (= ["1" "2" "3"] (c/split-by-comma "1,2,3")))
   (is (= ["1" "2" "3"] (c/split-by-comma ["1" "2" "3"]))))
+
+(deftest test-map-keys
+  (is (= (c/map-keys name {:a 1 :b 2})
+         {"a" 1 "b" 2}))
+  (is (= (c/map-keys name (sorted-map :a 1 :b 2))
+         (sorted-map "a" 1 "b" 2))))
+
+(deftest test-map-vals
+  (is (= (c/map-vals inc {:a 1 :b 2})
+         {:a 2 :b 3}))
+  (is (= (c/map-vals inc (sorted-map :a 1 :b 2))
+         (sorted-map :a 2 :b 3))))

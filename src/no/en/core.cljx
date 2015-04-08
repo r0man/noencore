@@ -231,3 +231,22 @@
   the call chain."
   [n & body]
   `(no.en.core/with-retries* ~n (fn [] ~@body)))
+
+(defn- editable? [coll]
+  #+clj  (instance? clojure.lang.IEditableCollection coll)
+  #+cljs (satisfies? cljs.core.IEditableCollection coll))
+
+(defn- reduce-map [f coll]
+  (if (editable? coll)
+    (persistent! (reduce-kv (f assoc!) (transient (empty coll)) coll))
+    (reduce-kv (f assoc) (empty coll) coll)))
+
+(defn map-keys
+  "Maps a function over the keys of an associative collection."
+  [f coll]
+  (reduce-map (fn [xf] (fn [m k v] (xf m (f k) v))) coll))
+
+(defn map-vals
+  "Maps a function over the values of an associative collection."
+  [f coll]
+  (reduce-map (fn [xf] (fn [m k v] (xf m k (f v)))) coll))
