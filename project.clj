@@ -32,7 +32,7 @@
   :deploy-repositories [["releases" :clojars]]
   :prep-tasks [["cljx" "once"] "javac" "compile"]
   :profiles {:dev {:plugins [[com.cemerick/clojurescript.test "0.3.3"]
-                             [com.cemerick/piggieback "0.2.0-SNAPSHOT"]
+                             [com.cemerick/piggieback "0.2.1"]
                              [com.keminglabs/cljx "0.6.0"]
                              [jonase/eastwood "0.2.1"]
                              [lein-cljsbuild "1.0.5"]

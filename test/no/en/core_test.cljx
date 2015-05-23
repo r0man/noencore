@@ -9,9 +9,9 @@
 (deftest test-base64-encode
   (is (nil? (c/base64-encode nil)))
   (are [s expected]
-    (is (= expected
-           #+clj (c/base64-encode (.getBytes s))
-           #+cljs (c/base64-encode s)))
+      (is (= expected
+             #+clj (c/base64-encode (.getBytes s))
+             #+cljs (c/base64-encode s)))
     "" ""
     "1" "MQ=="
     "x" "eA=="))
@@ -19,16 +19,16 @@
 (deftest test-base64-decode
   (is (nil? (c/base64-decode nil)))
   (are [s expected]
-    (is (= expected
-           #+clj (String. (c/base64-decode s))
-           #+cljs (c/base64-decode s)))
+      (is (= expected
+             #+clj (String. (c/base64-decode s))
+             #+cljs (c/base64-decode s)))
     "" ""
     "MQ==" "1"
     "eA==" "x"))
 
 (deftest test-compact-map
   (are [x expected]
-    (is (= expected (c/compact-map x)))
+      (is (= expected (c/compact-map x)))
     nil nil
     {} {}
     {:x nil} {}
@@ -39,7 +39,7 @@
 
 (deftest test-url-encode
   (are [s expected]
-    (is (= expected (c/url-encode s)))
+      (is (= expected (c/url-encode s)))
     nil nil
     1 "1"
     "" ""
@@ -50,7 +50,7 @@
 
 (deftest test-url-decode
   (are [s expected]
-    (is (= expected (c/url-decode s)))
+      (is (= expected (c/url-decode s)))
     nil nil
     "" ""
     "a" "a"
@@ -62,8 +62,8 @@
 (deftest test-format-url
   (is (nil? (c/format-url nil)))
   (are [s]
-    (is (= (dissoc (c/parse-url s) :query-string)
-           (dissoc (c/parse-url (c/format-url (c/parse-url s))) :query-string)))
+      (is (= (dissoc (c/parse-url s) :query-string)
+             (dissoc (c/parse-url (c/format-url (c/parse-url s))) :query-string)))
     "http://example.com/"
     "https://example.com/"
     "http://bob:secret@example.com/"
@@ -74,7 +74,7 @@
 
 (deftest test-format-query-params
   (are [params expected]
-    (is (= expected (c/format-query-params params)))
+      (is (= expected (c/format-query-params params)))
     nil nil
     {:a nil} nil
     {:a "1"} "a=1"
@@ -83,7 +83,7 @@
 
 (deftest test-parse-query-params
   (are [s expected]
-    (is (= expected (c/parse-query-params s)))
+      (is (= expected (c/parse-query-params s)))
     nil nil
     "" {}
     "a=1" {:a "1"}
@@ -206,7 +206,7 @@
 
 (deftest test-parse-percent
   (are [string expected]
-    (is (= expected (c/parse-percent string)))
+      (is (= expected (c/parse-percent string)))
     "+18.84" 18.84
     "+18.84%" 18.84))
 
@@ -248,3 +248,16 @@
          {:a 2 :b 3}))
   (is (= (c/map-vals inc (sorted-map :a 1 :b 2))
          (sorted-map :a 2 :b 3))))
+
+(deftest test-deep-merge
+  (is (= (c/deep-merge
+          {:a {:b {:c 1 :d {:x 1 :y 2}} :e 3} :f 4}
+          {:a {:b {:c 2 :d {:z 9} :z 3} :e 100}})
+         {:a {:b {:z 3, :c 2, :d {:z 9, :x 1, :y 2}}, :e 100}, :f 4})))
+
+(deftest test-deep-merge-with
+  (is (= (c/deep-merge-with
+          +
+          {:a {:b {:c 1 :d {:x 1 :y 2}} :e 3} :f 4}
+          {:a {:b {:c 2 :d {:z 9} :z 3} :e 100}})
+         {:a {:b {:z 3, :c 3, :d {:z 9, :x 1, :y 2}}, :e 103}, :f 4})))
