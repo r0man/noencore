@@ -12,7 +12,7 @@
             "lint" ["do"  ["eastwood"]]}
   :cljsbuild {:builds [{:id "test"
                         :compiler {:main 'no.en.test
-                                   :optimizations :none
+                                   :optimizations :advanced
                                    :output-to "target/testable.js"
                                    :pretty-print true}
                         :source-paths ["src" "test"]}]}
