@@ -1,11 +1,11 @@
 (ns no.en.core
   (:refer-clojure :exclude [replace read-string])
   (:require [clojure.string :refer [blank? join replace split upper-case]]
-            #+clj [clojure.edn :refer [read-string]]
-            #+cljs [cljs.reader :refer [read-string]]
-            #+cljs [goog.crypt.base64 :as base64])
-  #+clj (:import [java.net URLEncoder URLDecoder]
-                 [org.apache.commons.codec.binary Base64]))
+            #?(:clj [clojure.edn :refer [read-string]])
+            #?(:cljs [cljs.reader :refer [read-string]])
+            #?(:cljs [goog.crypt.base64 :as base64]))
+  #?(:clj (:import [java.net URLEncoder URLDecoder]
+                   [org.apache.commons.codec.binary Base64])))
 
 (def port-number
   {:http 80
@@ -30,22 +30,22 @@
 (defn utf8-string
   "Returns `bytes` as an UTF-8 encoded string."
   [bytes]
-  #+clj (String. bytes "UTF-8")
-  #+cljs (throw (ex-info "utf8-string not implemented yet" bytes)))
+  #?(:clj (String. bytes "UTF-8")
+     :cljs (throw (ex-info "utf8-string not implemented yet" bytes))))
 
 (defn base64-encode
   "Returns `s` as a Base64 encoded string."
   [bytes]
   (when bytes
-    #+clj (String. (Base64/encodeBase64 bytes))
-    #+cljs (base64/encodeString bytes false)))
+    #?(:clj (String. (Base64/encodeBase64 bytes))
+       :cljs (base64/encodeString bytes false))))
 
 (defn base64-decode
   "Returns `s` as a Base64 decoded string."
   [s]
   (when s
-    #+clj (Base64/decodeBase64 (.getBytes s))
-    #+cljs (base64/decodeString s false)))
+    #?(:clj (Base64/decodeBase64 (.getBytes s))
+       :cljs (base64/decodeString s false))))
 
 (defn compact-map
   "Removes all map entries where the value of the entry is empty."
@@ -64,23 +64,23 @@
   "Returns `s` as an URL encoded string."
   [s & [encoding]]
   (when s
-    #+clj (-> (URLEncoder/encode (str s) (or encoding "UTF-8"))
-              (replace "%7E" "~")
-              (replace "*" "%2A")
-              (replace "+" "%20"))
-    #+cljs (-> (js/encodeURIComponent (str s))
-               (replace "*" "%2A"))))
+    #?(:clj (-> (URLEncoder/encode (str s) (or encoding "UTF-8"))
+                (replace "%7E" "~")
+                (replace "*" "%2A")
+                (replace "+" "%20"))
+       :cljs (-> (js/encodeURIComponent (str s))
+                 (replace "*" "%2A")))))
 
 (defn url-decode
   "Returns `s` as an URL decoded string."
   [s & [encoding]]
   (when s
-    #+clj (URLDecoder/decode s (or encoding "UTF-8"))
-    #+cljs (js/decodeURIComponent s)))
+    #?(:clj (URLDecoder/decode s (or encoding "UTF-8"))
+       :cljs (js/decodeURIComponent s))))
 
 (defn pow [n x]
-  #+clj (Math/pow n x)
-  #+cljs (.pow js/Math n x))
+  #?(:clj (Math/pow n x)
+     :cljs (.pow js/Math n x)))
 
 (def byte-scale
   {"B" (pow 1024 0)
@@ -103,16 +103,16 @@
 
 (defn- parse-number [s parse-fn]
   (if-let [matches (re-matches #"\s*([-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?)(M|B)?.*" (str s))]
-    #+clj
-    (try (let [number (parse-fn (nth matches 1))
-               unit (nth matches 3)]
-           (apply-unit number unit))
-         (catch NumberFormatException _ nil))
-    #+cljs
-    (let [number (parse-fn (nth matches 1))
-          unit (nth matches 3)]
-      (if-not (js/isNaN number)
-        (apply-unit number unit)))))
+    #?(:clj
+       (try (let [number (parse-fn (nth matches 1))
+                  unit (nth matches 3)]
+              (apply-unit number unit))
+            (catch NumberFormatException _ nil))
+       :cljs
+       (let [number (parse-fn (nth matches 1))
+             unit (nth matches 3)]
+         (if-not (js/isNaN number)
+           (apply-unit number unit))))))
 
 (defn parse-bytes [s]
   (if-let [matches (re-matches #"\s*([-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?)(B|K|M|G|T|P|E|Z|Y)?.*" (str s))]
@@ -123,19 +123,19 @@
 
 (defn parse-integer
   "Parse `s` as a integer number."
-  [s] (parse-number s #(#+clj Integer/parseInt #+cljs js/parseInt %1)))
+  [s] (parse-number s #(#?(:clj Integer/parseInt :cljs js/parseInt) %1)))
 
 (defn parse-long
   "Parse `s` as a long number."
-  [s] (parse-number s #(#+clj Long/parseLong #+cljs js/parseInt %1)))
+  [s] (parse-number s #(#?(:clj Long/parseLong :cljs js/parseInt) %1)))
 
 (defn parse-double
   "Parse `s` as a double number."
-  [s] (parse-number s #(#+clj Double/parseDouble #+cljs js/parseFloat %1)))
+  [s] (parse-number s #(#?(:clj Double/parseDouble :cljs js/parseFloat) %1)))
 
 (defn parse-float
   "Parse `s` as a float number."
-  [s] (parse-number s #(#+clj Float/parseFloat #+cljs js/parseFloat %1)))
+  [s] (parse-number s #(#?(:clj Float/parseFloat :cljs js/parseFloat) %1)))
 
 (defn format-query-params
   "Format the map `m` into a query parameter string."
@@ -219,9 +219,9 @@
     (if-let [result
              (try
                [(thunk)]
-               (catch #+clj Exception #+cljs js/Error e
-                      (when (zero? n)
-                        (throw e))))]
+               (catch #?(:clj Exception :cljs js/Error) e
+                 (when (zero? n)
+                   (throw e))))]
       (result 0)
       (recur (dec n)))))
 
@@ -233,8 +233,8 @@
   `(no.en.core/with-retries* ~n (fn [] ~@body)))
 
 (defn- editable? [coll]
-  #+clj  (instance? clojure.lang.IEditableCollection coll)
-  #+cljs (satisfies? cljs.core.IEditableCollection coll))
+  #?(:clj  (instance? clojure.lang.IEditableCollection coll)
+     :cljs (satisfies? cljs.core.IEditableCollection coll)))
 
 (defn- reduce-map [f coll]
   (if (editable? coll)
