@@ -6,36 +6,19 @@
   :license {:name "Eclipse Public License"
             :url "http://www.eclipse.org/legal/epl-v10.html"}
   :dependencies [[commons-codec/commons-codec "1.10"]
-                 [org.clojure/clojure "1.6.0"]
-                 [org.clojure/clojurescript "0.0-3165" :scope "provided"]]
-  :aliases {"cleantest" ["do" "clean," "cljx" "once," "test," "cljsbuild" "test"]
-            "ci" ["do" ["cleantest"] ["lint"]]
+                 [org.clojure/clojure "1.7.0"]
+                 [org.clojure/clojurescript "1.7.170" :scope "provided"]]
+  :aliases {"ci" ["do" ["test"] ["doo" "phantom" "test" "once"] ["lint"]]
             "lint" ["do"  ["eastwood"]]}
-  :cljx {:builds [{:source-paths ["src"]
-                   :output-path "target/classes"
-                   :rules :clj}
-                  {:source-paths ["src"]
-                   :output-path "target/classes"
-                   :rules :cljs}
-                  {:source-paths ["test"]
-                   :output-path "target/test-classes"
-                   :rules :clj}
-                  {:source-paths ["test"]
-                   :output-path "target/test-classes"
-                   :rules :cljs}]}
-  :cljsbuild {:builds [{:source-paths ["target/classes" "target/test-classes"]
-                        :compiler {:output-to "target/testable.js"
-                                   :optimizations :advanced
-                                   :pretty-print true}}]
-              :test-commands {"node" ["node" :node-runner "target/testable.js"]
-                              "phantom" ["phantomjs" :runner "target/testable.js"]}}
+  :cljsbuild {:builds [{:id "test"
+                        :compiler {:main 'no.en.test
+                                   :optimizations :none
+                                   :output-to "target/testable.js"
+                                   :pretty-print true}
+                        :source-paths ["src" "test"]}]}
   :deploy-repositories [["releases" :clojars]]
-  :prep-tasks [["cljx" "once"] "javac" "compile"]
-  :profiles {:dev {:plugins [[com.cemerick/clojurescript.test "0.3.3"]
-                             [com.cemerick/piggieback "0.2.1"]
-                             [com.keminglabs/cljx "0.6.0"]
+  :profiles {:dev {:plugins [[com.cemerick/piggieback "0.2.1"]
                              [jonase/eastwood "0.2.1"]
                              [lein-cljsbuild "1.0.5"]
-                             [lein-difftest "2.0.0"]]
-                   :repl-options {:nrepl-middleware [cljx.repl-middleware/wrap-cljx]}
-                   :test-paths ["target/test-classes"]}})
+                             [lein-difftest "2.0.0"]
+                             [lein-doo "0.1.6-rc.1"]]}})

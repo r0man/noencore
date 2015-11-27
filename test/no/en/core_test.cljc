@@ -1,17 +1,14 @@
 (ns no.en.core-test
-  #+cljs (:require-macros [cemerick.cljs.test :refer [deftest is are]]
-                          [no.en.core :refer [with-retries]])
-  (:require [no.en.core :as c]
-            #+clj [clojure.test :refer :all]
-            #+clj [no.en.core :refer [with-retries]]
-            #+cljs [cemerick.cljs.test :as t]))
+  (:require [no.en.core :as c #?(:clj :refer :cljs :refer-macros) [with-retries]]
+            #?(:clj [clojure.test :refer :all]
+               :cljs [cljs.test :refer-macros [are is deftest]])))
 
 (deftest test-base64-encode
   (is (nil? (c/base64-encode nil)))
   (are [s expected]
       (is (= expected
-             #+clj (c/base64-encode (.getBytes s))
-             #+cljs (c/base64-encode s)))
+             #?(:clj (c/base64-encode (.getBytes s))
+                :cljs (c/base64-encode s))))
     "" ""
     "1" "MQ=="
     "x" "eA=="))
@@ -20,8 +17,8 @@
   (is (nil? (c/base64-decode nil)))
   (are [s expected]
       (is (= expected
-             #+clj (String. (c/base64-decode s))
-             #+cljs (c/base64-decode s)))
+             #?(:clj (String. (c/base64-decode s))
+                :cljs (c/base64-decode s))))
     "" ""
     "MQ==" "1"
     "eA==" "x"))
@@ -143,7 +140,7 @@
     (try (with-retries 10
            (swap! count inc)
            (throw (ex-info "boom" {})))
-         (catch #+clj Exception #+cljs js/Error _ nil))
+         (catch #?(:clj Exception :cljs js/Error) _ nil))
     (is (= 11 @count))))
 
 (deftest test-parse-bytes
@@ -183,8 +180,8 @@
 (deftest test-parse-integer
   (is (nil? (c/parse-integer nil)))
   (is (nil? (c/parse-integer "")))
-  #+clj (is (nil? (c/parse-integer "1.1")))
-  #+cljs (is (= 1 (c/parse-integer "1.1")))
+  #?(:clj (is (nil? (c/parse-integer "1.1")))
+     :cljs (is (= 1 (c/parse-integer "1.1"))))
   (is (= 1 (c/parse-integer "1")))
   (is (= 1 (c/parse-integer "1-europe")))
   (is (= 10 (c/parse-integer "10")))
@@ -195,8 +192,8 @@
 (deftest test-parse-long
   (is (nil? (c/parse-long nil)))
   (is (nil? (c/parse-long "")))
-  #+clj (is (nil? (c/parse-long "1.1")))
-  #+cljs (is (= 1 (c/parse-long "1.1")))
+  #?(:clj (is (nil? (c/parse-long "1.1")))
+     :cljs (is (= 1 (c/parse-long "1.1"))))
   (is (= 1 (c/parse-long "1")))
   (is (= 1 (c/parse-long "1-europe")))
   (is (= 10 (c/parse-long "10")))
@@ -213,9 +210,9 @@
 (deftest test-pattern-quote
   (is (= "1" (c/pattern-quote "1")))
   (is (= "x" (c/pattern-quote "x")))
-  #+clj (is (= "\\." (c/pattern-quote ".")))
-  #+clj (is (= "\\[" (c/pattern-quote "[")))
-  #+clj (is (= "a\\.b\\.c" (c/pattern-quote "a.b.c"))))
+  #?(:clj (is (= "\\." (c/pattern-quote "."))))
+  #?(:clj (is (= "\\[" (c/pattern-quote "["))))
+  #?(:clj (is (= "a\\.b\\.c" (c/pattern-quote "a.b.c")))))
 
 (deftest test-separator
   (is (nil? (c/separator "Message")))
