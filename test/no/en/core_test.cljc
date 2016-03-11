@@ -129,7 +129,15 @@
            (:query-params spec)))
     (is (= "mode=dev&access-token=e3ff052a0b32fd3309bdf6534115e25a"
            (:query-string spec)))
-    (is (= "_=_" (:fragment spec)))))
+    (is (= "_=_" (:fragment spec))))
+  (let [spec (c/parse-url "http://localhost:20001/map#3/7.68/82.72")]
+    (is (= :http (:scheme spec)))
+    (is (= "localhost" (:server-name spec)))
+    (is (= 20001 (:server-port spec)))
+    (is (= "/map" (:uri spec)))
+    (is (= (:query-params spec) nil))
+    (is (= (:query-string spec) nil))
+    (is (= "3/7.68/82.72" (:fragment spec)))))
 
 (deftest test-with-retries
   (let [count (atom 0)]
