@@ -9,3 +9,4 @@ pom.xml
 /out
 /.repl
 /pom.xml.asc
+/.cljs_node_repl
