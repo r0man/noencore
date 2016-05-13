@@ -7,7 +7,7 @@
             :url "http://www.eclipse.org/legal/epl-v10.html"}
   :dependencies [[commons-codec/commons-codec "1.10"]
                  [org.clojure/clojure "1.8.0"]
-                 [org.clojure/clojurescript "1.7.228" :scope "provided"]]
+                 [org.clojure/clojurescript "1.8.51" :scope "provided"]]
   :aliases {"ci" ["do" ["test"] ["doo" "phantom" "test" "once"] ["lint"]]
             "lint" ["do"  ["eastwood"]]}
   :cljsbuild {:builds [{:id "test"
