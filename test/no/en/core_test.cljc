@@ -6,9 +6,9 @@
 (deftest test-base64-encode
   (is (nil? (c/base64-encode nil)))
   (are [s expected]
-      (is (= expected
-             #?(:clj (c/base64-encode (.getBytes s))
-                :cljs (c/base64-encode s))))
+      (= expected
+         #?(:clj (c/base64-encode (.getBytes s))
+            :cljs (c/base64-encode s)))
     "" ""
     "1" "MQ=="
     "x" "eA=="))
@@ -16,16 +16,16 @@
 (deftest test-base64-decode
   (is (nil? (c/base64-decode nil)))
   (are [s expected]
-      (is (= expected
-             #?(:clj (String. (c/base64-decode s))
-                :cljs (c/base64-decode s))))
+      (= expected
+         #?(:clj (String. (c/base64-decode s))
+            :cljs (c/base64-decode s)))
     "" ""
     "MQ==" "1"
     "eA==" "x"))
 
 (deftest test-compact-map
   (are [x expected]
-      (is (= expected (c/compact-map x)))
+      (= expected (c/compact-map x))
     nil nil
     {} {}
     {:x nil} {}
@@ -36,7 +36,7 @@
 
 (deftest test-url-encode
   (are [s expected]
-      (is (= expected (c/url-encode s)))
+      (= expected (c/url-encode s))
     nil nil
     1 "1"
     "" ""
@@ -47,7 +47,7 @@
 
 (deftest test-url-decode
   (are [s expected]
-      (is (= expected (c/url-decode s)))
+      (= expected (c/url-decode s))
     nil nil
     "" ""
     "a" "a"
@@ -59,8 +59,8 @@
 (deftest test-format-url
   (is (nil? (c/format-url nil)))
   (are [s]
-      (is (= (dissoc (c/parse-url s) :query-string)
-             (dissoc (c/parse-url (c/format-url (c/parse-url s))) :query-string)))
+      (= (dissoc (c/parse-url s) :query-string)
+         (dissoc (c/parse-url (c/format-url (c/parse-url s))) :query-string))
     "http://example.com/"
     "https://example.com/"
     "http://bob:secret@example.com/"
@@ -71,7 +71,7 @@
 
 (deftest test-format-query-params
   (are [params expected]
-      (is (= expected (c/format-query-params params)))
+      (= expected (c/format-query-params params))
     nil nil
     {:a nil} nil
     {:a "1"} "a=1"
@@ -80,7 +80,7 @@
 
 (deftest test-parse-query-params
   (are [s expected]
-      (is (= expected (c/parse-query-params s)))
+      (= expected (c/parse-query-params s))
     nil nil
     "" {}
     "a=1" {:a "1"}
@@ -104,7 +104,7 @@
     (is (= "/example" (:uri spec))))
   (let [spec (c/parse-url "postgresql://tiger:scotch@localhost/example?a=1&b=2&c=%2A")]
     (is (= :postgresql (:scheme spec)))
-    (is (= "tiger" (:user spec)))
+    (is (= "tiger" (:username spec)))
     (is (= "scotch" (:password spec)))
     (is (= "localhost" (:server-name spec)))
     (is (= 5432 (:server-port spec)))
@@ -113,7 +113,7 @@
     (is (= {:a "1", :b "2" :c "*"} (:query-params spec))))
   (let [spec (c/parse-url "rabbitmq://tiger:scotch@localhost")]
     (is (= :rabbitmq (:scheme spec)))
-    (is (= "tiger" (:user spec)))
+    (is (= "tiger" (:username spec)))
     (is (= "scotch" (:password spec)))
     (is (= "localhost" (:server-name spec)))
     (is (= 5672 (:server-port spec)))
@@ -211,7 +211,7 @@
 
 (deftest test-parse-percent
   (are [string expected]
-      (is (= expected (c/parse-percent string)))
+      (= expected (c/parse-percent string))
     "+18.84" 18.84
     "+18.84%" 18.84))
 

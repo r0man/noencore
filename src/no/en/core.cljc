@@ -123,19 +123,23 @@
 
 (defn parse-integer
   "Parse `s` as a integer number."
-  [s] (parse-number s #(#?(:clj Integer/parseInt :cljs js/parseInt) %1)))
+  [s]
+  (parse-number s #(#?(:clj Integer/parseInt :cljs js/parseInt) %1)))
 
 (defn parse-long
   "Parse `s` as a long number."
-  [s] (parse-number s #(#?(:clj Long/parseLong :cljs js/parseInt) %1)))
+  [s]
+  (parse-number s #(#?(:clj Long/parseLong :cljs js/parseInt) %1)))
 
 (defn parse-double
   "Parse `s` as a double number."
-  [s] (parse-number s #(#?(:clj Double/parseDouble :cljs js/parseFloat) %1)))
+  [s]
+  (parse-number s #(#?(:clj Double/parseDouble :cljs js/parseFloat) %1)))
 
 (defn parse-float
   "Parse `s` as a float number."
-  [s] (parse-number s #(#?(:clj Float/parseFloat :cljs js/parseFloat) %1)))
+  [s]
+  (parse-number s #(#?(:clj Float/parseFloat :cljs js/parseFloat) %1)))
 
 (defn format-query-params
   "Format the map `m` into a query parameter string."
@@ -156,8 +160,9 @@
     (let [query-params (:query-params m)]
       (str (if (:scheme m)
              (str (name (:scheme m)) "://"))
-           (let [{:keys [user password]} m]
-             (if user (str (if user user) (if password (str ":" password)) "@")))
+           (let [{:keys [username password]} m]
+             (when username
+               (str username (when password (str ":" password)) "@")))
            (:server-name m)
            (if-let [port (:server-port m)]
              (if-not (= port (port-number (:scheme m)))
@@ -172,11 +177,13 @@
 
 (defn parse-percent
   "Parse `s` as a percentage."
-  [s] (parse-double (replace s "%" "")))
+  [s]
+  (parse-double (replace s "%" "")))
 
 (defn pattern-quote
   "Quote the special characters in `s` that are used in regular expressions."
-  [s] (replace (name s) #"([\[\]\^\$\|\(\)\\\+\*\?\{\}\=\!.])" "\\\\$1"))
+  [s]
+  (replace (name s) #"([\[\]\^\$\|\(\)\\\+\*\?\{\}\=\!.])" "\\\\$1"))
 
 (defn separator
   "Returns the first string that separates the components in `s`."
@@ -201,7 +208,7 @@
     (let [scheme (keyword (nth matches 1))]
       (compact-map
        {:scheme scheme
-        :user (nth matches 3)
+        :username (nth matches 3)
         :password (nth matches 4)
         :server-name (nth matches 6)
         :server-port (or (parse-integer (nth matches 8)) (port-number scheme))
