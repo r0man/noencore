@@ -69,6 +69,11 @@
     "https://bob:secret@example.com/?a=1&b=2&c=%2A"
     "https://bob:secret@example.com/?a=1&b=2&c=%2A#_=_"))
 
+(deftest test-public-url
+  (let [url (c/parse-url "http://bob:secret@example.com/")]
+    (is (nil? (c/public-url nil)))
+    (is (= (c/public-url url) "http://bob@example.com/"))))
+
 (deftest test-format-query-params
   (are [params expected]
       (= expected (c/format-query-params params))

@@ -175,6 +175,11 @@
            (if-not (blank? (:fragment m))
              (str "#" (:fragment m)))))))
 
+(defn public-url
+  "Return the formatted `url` without password as a string."
+  [url]
+  (format-url (dissoc url :password)))
+
 (defn parse-percent
   "Parse `s` as a percentage."
   [s]
