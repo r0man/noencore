@@ -8,11 +8,13 @@
                    [org.apache.commons.codec.binary Base64])))
 
 (def port-number
-  {:http 80
+  {:amqp 5672
+   :http 80
    :https 443
    :mysql 3306
    :postgresql 5432
-   :rabbitmq 5672})
+   :rabbitmq 5672
+   :zookeeper 2181})
 
 (def url-regex #"([^:]+)://(([^:]+):([^@]+)@)?(([^:/]+)(:([0-9]+))?((/[^?#]*)(\?([^#]*))?)?)(\#(.*))?")
 
