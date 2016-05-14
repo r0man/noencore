@@ -222,6 +222,12 @@
         :query-string (nth matches 12)
         :fragment (nth matches 14)}))))
 
+(defmacro prog1 [& body]
+  "Evaluate `body`, returning the result of the first form."
+  `(let [result# ~(first body)]
+     ~@(rest body)
+     result#))
+
 (defn with-retries*
   "Executes thunk. If an exception is thrown, will retry. At most n retries
   are done. If still some exception is thrown it is bubbled upwards in

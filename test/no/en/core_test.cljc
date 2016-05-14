@@ -1,5 +1,5 @@
 (ns no.en.core-test
-  (:require [no.en.core :as c #?(:clj :refer :cljs :refer-macros) [with-retries]]
+  (:require [no.en.core :as c #?(:clj :refer :cljs :refer-macros) [prog1 with-retries]]
             #?(:clj [clojure.test :refer :all]
                :cljs [cljs.test :refer-macros [are is deftest]])))
 
@@ -73,6 +73,11 @@
   (let [url (c/parse-url "http://bob:secret@example.com/")]
     (is (nil? (c/public-url nil)))
     (is (= (c/public-url url) "http://bob@example.com/"))))
+
+(deftest test-prog1
+  (is (= (prog1) nil))
+  (is (= (prog1 1) 1))
+  (is (= (prog1 1 2) 1)))
 
 (deftest test-format-query-params
   (are [params expected]
