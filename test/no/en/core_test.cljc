@@ -67,7 +67,8 @@
     "https://bob:secret@example.com/"
     "https://bob:secret@example.com/?a=1&b=2"
     "https://bob:secret@example.com/?a=1&b=2&c=%2A"
-    "https://bob:secret@example.com/?a=1&b=2&c=%2A#_=_"))
+    "https://bob:secret@example.com/?a=1&b=2&c=%2A#_=_"
+    "https://example.com/signin?email=bob@example.com&phone=123"))
 
 (deftest test-public-url
   (let [url (c/parse-url "http://bob:secret@example.com/")]
