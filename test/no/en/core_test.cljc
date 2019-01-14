@@ -78,7 +78,7 @@
 (deftest test-prog1
   (is (= (prog1) nil))
   (is (= (prog1 1) 1))
-  (is (= (prog1 1 2) 1)))
+  (is (= (prog1 1 (with-out-str (println))) 1)))
 
 (deftest test-format-query-params
   (are [params expected]
@@ -148,7 +148,15 @@
     (is (= "/map" (:uri spec)))
     (is (= (:query-params spec) nil))
     (is (= (:query-string spec) nil))
-    (is (= "3/7.68/82.72" (:fragment spec)))))
+    (is (= "3/7.68/82.72" (:fragment spec))))
+  (let [spec (c/parse-url "http://localhost:8000/spots/1-Me%C3%B1akoz")]
+    (is (= :http (:scheme spec)))
+    (is (= "localhost" (:server-name spec)))
+    (is (= 8000 (:server-port spec)))
+    (is (= "/spots/1-Meñakoz" (:uri spec)))
+    (is (= (:query-params spec) nil))
+    (is (= (:query-string spec) nil))
+    (is (nil? (:fragment spec)))))
 
 (deftest test-with-retries
   (let [count (atom 0)]

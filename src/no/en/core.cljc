@@ -98,9 +98,9 @@
 (defn- apply-unit [number unit]
   (if (string? unit)
     (case (upper-case unit)
-      (case unit
-        "M" (* number 1000000)
-        "B" (* number 1000000000)))
+      "M" (* number 1000000)
+      "B" (* number 1000000000)
+      number)
     number))
 
 (defn- parse-number [s parse-fn]
@@ -219,13 +219,14 @@
         :password (nth matches 4)
         :server-name (nth matches 6)
         :server-port (or (parse-integer (nth matches 8)) (port-number scheme))
-        :uri (nth matches 10)
+        :uri (url-decode (nth matches 10))
         :query-params (parse-query-params  (nth matches 12))
         :query-string (nth matches 12)
         :fragment (nth matches 14)}))))
 
-(defmacro prog1 [& body]
+(defmacro prog1
   "Evaluate `body`, returning the result of the first form."
+  [& body]
   `(let [result# ~(first body)]
      ~@(rest body)
      result#))
