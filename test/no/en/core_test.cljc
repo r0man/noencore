@@ -120,7 +120,7 @@
     (is (= "localhost" (:server-name spec)))
     (is (= 5432 (:server-port spec)))
     (is (= "/example" (:uri spec)))
-    (is (= "a=1&b=2&c=%2A" (:query-string spec)))
+    (is (= "a=1&b=2&c=*" (:query-string spec)))
     (is (= {:a "1", :b "2" :c "*"} (:query-params spec))))
   (let [spec (c/parse-url "rabbitmq://tiger:scotch@localhost")]
     (is (= :rabbitmq (:scheme spec)))
