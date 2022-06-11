@@ -7,7 +7,7 @@
   (is (nil? (c/base64-encode nil)))
   (are [s expected]
       (= expected
-         #?(:clj (c/base64-encode (.getBytes s))
+         #?(:clj (c/base64-encode (.getBytes ^String s))
             :cljs (c/base64-encode s)))
     "" ""
     "1" "MQ=="
@@ -17,7 +17,7 @@
   (is (nil? (c/base64-decode nil)))
   (are [s expected]
       (= expected
-         #?(:clj (String. (c/base64-decode s))
+         #?(:clj (let [^bytes bytes (c/base64-decode s)] (String. bytes))
             :cljs (c/base64-decode s)))
     "" ""
     "MQ==" "1"

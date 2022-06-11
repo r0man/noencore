@@ -16,10 +16,10 @@
                                    :pretty-print true}
                         :source-paths ["src" "test"]}]}
   :deploy-repositories [["releases" :clojars]]
-  :profiles {:dev {:dependencies [[cider/piggieback "0.3.10"]
+  :profiles {:dev {:dependencies [[cider/piggieback "0.5.3"]
                                   [org.clojure/clojurescript "1.10.439"]]
-                   :plugins [[jonase/eastwood "0.3.4"]
-                             [lein-cljsbuild "1.1.7"]
+                   :plugins [[jonase/eastwood "1.2.3"]
+                             [lein-cljsbuild "1.1.8"]
                              [lein-difftest "2.0.0"]
                              [lein-doo "0.1.11"]]
                    :repl-options {:nrepl-middleware [cider.piggieback/wrap-cljs-repl]}}})
