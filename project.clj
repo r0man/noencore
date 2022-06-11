@@ -1,4 +1,4 @@
-(defproject noencore "0.3.7"
+(defproject noencore "0.3.8-SNAPSHOT"
   :description "Clojure and ClojureScript fns not in core."
   :url "http://github.com/r0man/noencore"
   :author "r0man"
