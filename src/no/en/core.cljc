@@ -32,8 +32,8 @@
 (defn utf8-string
   "Returns `bytes` as an UTF-8 encoded string."
   [bytes]
-  #?(:clj (String. bytes "UTF-8")
-     :cljs (throw (ex-info "utf8-string not implemented yet" bytes))))
+  #?(:clj (String. ^bytes bytes "UTF-8")
+     :cljs (throw (ex-info "utf8-string not implemented yet" {:bytes bytes}))))
 
 (defn base64-encode
   "Returns `s` as a Base64 encoded string."
@@ -46,7 +46,7 @@
   "Returns `s` as a Base64 decoded string."
   [s]
   (when s
-    #?(:clj (Base64/decodeBase64 (.getBytes s))
+    #?(:clj (Base64/decodeBase64 (.getBytes ^String s "UTF-8"))
        :cljs (base64/decodeString s false))))
 
 (defn compact-map
@@ -64,7 +64,7 @@
 
 (defn url-encode
   "Returns `s` as an URL encoded string."
-  [s & [encoding]]
+  ^String [s & [^String encoding]]
   (when s
     #?(:clj (-> (URLEncoder/encode (str s) (or encoding "UTF-8"))
                 (replace "%7E" "~")
@@ -75,7 +75,7 @@
 
 (defn url-decode
   "Returns `s` as an URL decoded string."
-  [s & [encoding]]
+  ^String [^String s & [^String encoding]]
   (when s
     #?(:clj (URLDecoder/decode s (or encoding "UTF-8"))
        :cljs (js/decodeURIComponent s))))
