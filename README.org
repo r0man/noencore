@@ -1,0 +1,18 @@
+* no.en.core
+
+  [[https://clojars.org/noencore][https://img.shields.io/clojars/v/noencore.svg]]
+  [[https://github.com/r0man/noencore/actions?query=workflow%3A%22Clojure+CI%22][https://github.com/r0man/noencore/workflows/Clojure%20CI/badge.svg]]
+  [[https://versions.deps.co/r0man/noencore][https://versions.deps.co/r0man/noencore/status.svg]]
+  [[https://versions.deps.co/r0man/noencore][https://versions.deps.co/r0man/noencore/downloads.svg]]
+
+Clojure & ClojureScript functions not in core.
+
+** Installation
+
+[[https://clojars.org/noencore/latest-version.svg]]]]
+
+** License
+
+Copyright (C) 2014-2022 r0man
+
+Distributed under the Eclipse Public License, the same as Clojure.
