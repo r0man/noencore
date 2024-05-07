@@ -1,5 +1,5 @@
 (ns no.en.core
-  (:refer-clojure :exclude [replace read-string parse-long parse-double])
+  (:refer-clojure :exclude [replace read-string parse-long parse-double parse-integer])
   (:require [clojure.string :refer [blank? join replace split upper-case]]
             #?(:clj [clojure.edn :refer [read-string]])
             #?(:cljs [cljs.reader :refer [read-string]])
