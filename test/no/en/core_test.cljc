@@ -12,7 +12,7 @@
     "" ""
     "1" "MQ=="
     "x" "eA=="
-    "ё" "0ZE="))
+    #?(:clj "ё" :cljs "Ñ\u0091") "0ZE="))
 
 (deftest test-base64-decode
   (is (nil? (c/base64-decode nil)))
@@ -23,7 +23,7 @@
     "" ""
     "MQ==" "1"
     "eA==" "x"
-    "0ZE=" "ё"))
+    "0ZE=" #?(:clj "ё" :cljs "Ñ\u0091")))
 
 (deftest test-compact-map
   (are [x expected]
