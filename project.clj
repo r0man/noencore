@@ -5,8 +5,7 @@
   :min-lein-version "2.0.0"
   :license {:name "Eclipse Public License"
             :url "http://www.eclipse.org/legal/epl-v10.html"}
-  :dependencies [[commons-codec/commons-codec "1.17.0"]
-                 [org.clojure/clojure "1.11.3"]]
+  :dependencies [[org.clojure/clojure "1.11.3"]]
   :aliases {"ci" ["do" ["test"] ["doo" "node" "test" "once"] ["lint"]]
             "lint" ["do"  ["eastwood"]]}
   :cljsbuild {:builds [{:id "test"

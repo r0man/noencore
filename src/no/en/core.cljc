@@ -5,7 +5,7 @@
             #?(:cljs [cljs.reader :refer [read-string]])
             #?(:cljs [goog.crypt.base64 :as base64]))
   #?(:clj (:import [java.net URLEncoder URLDecoder]
-                   [org.apache.commons.codec.binary Base64])))
+                   [java.util Base64])))
 
 (def port-number
   {:amqp 5672
@@ -30,23 +30,23 @@
   [s] (split-by-regex s #"\s*,\s*"))
 
 (defn utf8-string
-  "Returns `bytes` as an UTF-8 encoded string."
+  "Returns `bytes` as a UTF-8 encoded string."
   [bytes]
   #?(:clj (String. ^bytes bytes "UTF-8")
      :cljs (throw (ex-info "utf8-string not implemented yet" {:bytes bytes}))))
 
 (defn base64-encode
-  "Returns `s` as a Base64 encoded string."
-  [bytes]
+  "Returns `bytes`, bytes (CLJ) | string (CLJS), as a Base64 encoded string."
+  ^String [bytes]
   (when bytes
-    #?(:clj (String. (Base64/encodeBase64 bytes))
+    #?(:clj (String. (.encode (Base64/getEncoder) ^bytes bytes))
        :cljs (base64/encodeString bytes false))))
 
 (defn base64-decode
-  "Returns `s` as a Base64 decoded string."
-  [s]
+  "Returns string `s` as a Base64 decoded bytes (CLJ) | byte string (CLJS)."
+  [^String s]
   (when s
-    #?(:clj (Base64/decodeBase64 (.getBytes ^String s "UTF-8"))
+    #?(:clj (.decode (Base64/getDecoder) s)
        :cljs (base64/decodeString s false))))
 
 (defn compact-map

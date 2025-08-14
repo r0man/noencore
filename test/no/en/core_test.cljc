@@ -11,7 +11,8 @@
             :cljs (c/base64-encode s)))
     "" ""
     "1" "MQ=="
-    "x" "eA=="))
+    "x" "eA=="
+    "ё" "0ZE="))
 
 (deftest test-base64-decode
   (is (nil? (c/base64-decode nil)))
@@ -21,7 +22,8 @@
             :cljs (c/base64-decode s)))
     "" ""
     "MQ==" "1"
-    "eA==" "x"))
+    "eA==" "x"
+    "0ZE=" "ё"))
 
 (deftest test-compact-map
   (are [x expected]
